@@ -1,0 +1,41 @@
+name: Build HackEFoot
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Instalar Theos
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+      
+      - name: Verificar arquivos
+        run: |
+          echo "Arquivos no repositório:"
+          ls -la
+      
+      - name: Compilar
+        run: |
+          export THEOS=$HOME/theos
+          make package ARCHS=arm64 DEBUG=0
+          echo "=== Build concluído ==="
+          find . -name "*.dylib" -o -name "*.plist" -o -name "*.deb"
+      
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: HackEFoot
+          path: |
+            .theos/obj/debug/arm64/HackEFoot.dylib
+            .theos/obj/arm64/HackEFoot.dylib
+            HackEFoot.plist
+            packages/*.deb
+          if-no-files-found: warn
