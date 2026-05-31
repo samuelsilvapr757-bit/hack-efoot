@@ -1,0 +1,9 @@
+Package: com.hackerai.hackefoot
+Name: HackEFoot
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: eFootball Hack Completo
+Maintainer: HackerAI
+Author: HackerAI
+Section: Tweaks
